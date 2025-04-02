@@ -67,7 +67,7 @@
 
     <script>
         window.addEventListener('message', (event) => {
-            const trustedOrigin = 'https://lanebobane.github.io'; // Replace with actual iframe origin
+            const trustedOrigin = 'http://localhost:3000'; // Replace with actual iframe origin
             if (event.origin !== trustedOrigin) {
                 console.warn('Blocked message from untrusted origin:', event.origin);
             }else{
