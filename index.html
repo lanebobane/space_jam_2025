@@ -78,7 +78,12 @@
                     console.log(event.data.text)
                     console.log('properties')
                     console.log(event.data.properties)
-                    // freshpaint.track(event.data.text, properties: event.data.properties)    
+                    fp_props = {
+                        "name": event.data.properties.form_name,
+                        "email": event.data.properties.form_email,
+                        "address": event.data.properties.form_address,
+                    }
+                    freshpaint.track(event.data.text, fp_props)    
                 }
                 else {
                     console.log(`Non-Freshpaint message received: ${event.data}`)
