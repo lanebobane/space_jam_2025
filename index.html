@@ -74,7 +74,7 @@
                 console.log('Received message from iframe:');
                 if (event.data.type == 'freshpaint_message'){
                     console.log('Sending to Freshpaint...')
-                    freshpaint.track(event.data.text)    
+                    freshpaint.track(event.data.text, properties: event.data.properties)    
                 }
                 else {
                     console.log(`Non-Freshpaint message received: ${event.data}`)
