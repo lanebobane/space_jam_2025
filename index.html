@@ -71,13 +71,9 @@
             if (event.origin !== trustedOrigin) {
                 console.warn('Blocked message from untrusted origin:', event.origin);
             }else{
-                console.log('Received message from iframe:');
+                console.log(`Received message from trusted origin: ${trustedOrigin}`);
                 if (event.data.type == 'freshpaint_message'){
                     console.log('Sending to Freshpaint...')
-                    console.log('text')
-                    console.log(event.data.text)
-                    console.log('properties')
-                    console.log(event.data.properties)
                     fp_props = {
                         "name": event.data.properties.form_name,
                         "email": event.data.properties.form_email,
@@ -87,12 +83,8 @@
                 }
                 else {
                     console.log(`Non-Freshpaint message received: ${event.data}`)
-                }
-                
+                }   
             }
-            // return;
-
-            // console.log('Received message from iframe:', event.data);
         });
     </script>
 
