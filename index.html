@@ -80,6 +80,9 @@
                         "address": event.data.properties.form_address,
                     }
                     freshpaint.track(event.data.text, fp_props)    
+                } else if (event.data.type == 'freshpaint_message_2') {
+                    console.log('Sending to Freshpaint...')
+                    freshpaint.track(event.data.text)
                 }
                 else {
                     console.log(`Non-Freshpaint message received: ${event.data}`)
