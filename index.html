@@ -64,6 +64,38 @@
         });
     </script>
 
+    
+	
+
+    <script>
+        window.addEventListener('message', (event) => {
+            const trustedOrigin = 'https://lanebobane.github.io'; // Replace with actual iframe origin
+            if (event.origin !== trustedOrigin) {
+                console.warn('Blocked message from untrusted origin:', event.origin);
+            }else{
+                console.log(`Received message from trusted origin: ${trustedOrigin}`);
+                if (event.data.type == 'freshpaint_message'){
+                    console.log('Sending to Freshpaint...')
+                    fp_props = {
+                        "name": event.data.properties.form_name,
+                        "email": event.data.properties.form_email,
+                        "address": event.data.properties.form_address,
+                    }
+                    freshpaint.track(event.data.text, fp_props)    
+                } else if (event.data.type == 'freshpaint_message_2') {
+                    console.log('Sending to Freshpaint...')
+                    freshpaint.track(event.data.text)
+                }
+                else {
+                    console.log(`Non-Freshpaint message received: ${event.data}`)
+                }   
+            }
+        });
+    </script>
+
+</head>
+<body>
+
     <script src='https://freshpaint-cdn.com/consent/freshpaint-consent-helper.umd.js'></script>
     <!-- Consent Manager -->
     <script type='text/javascript'>
@@ -203,36 +235,7 @@
         });
 
     </script>
-	
 
-    <script>
-        window.addEventListener('message', (event) => {
-            const trustedOrigin = 'https://lanebobane.github.io'; // Replace with actual iframe origin
-            if (event.origin !== trustedOrigin) {
-                console.warn('Blocked message from untrusted origin:', event.origin);
-            }else{
-                console.log(`Received message from trusted origin: ${trustedOrigin}`);
-                if (event.data.type == 'freshpaint_message'){
-                    console.log('Sending to Freshpaint...')
-                    fp_props = {
-                        "name": event.data.properties.form_name,
-                        "email": event.data.properties.form_email,
-                        "address": event.data.properties.form_address,
-                    }
-                    freshpaint.track(event.data.text, fp_props)    
-                } else if (event.data.type == 'freshpaint_message_2') {
-                    console.log('Sending to Freshpaint...')
-                    freshpaint.track(event.data.text)
-                }
-                else {
-                    console.log(`Non-Freshpaint message received: ${event.data}`)
-                }   
-            }
-        });
-    </script>
-
-</head>
-<body>
 
     <h1>Lane's Freshpaint Testing Website!</h1>
 
