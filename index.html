@@ -12,11 +12,11 @@
             font-family: 'Comic Sans MS', cursive, sans-serif;
             text-align: center;*/
               background: url("https://www.spacejam.com/1996/img/bg_stars.gif");
-  background-repeat: repeat;
-  background-color: black; /* fallback color */
-  color: white; /* optional: for better readability on dark background */
-  font-family: Arial, sans-serif; /* optional: basic 90s-style font */
-  text-align: center;
+            background-repeat: repeat;
+            background-color: black; /* fallback color */
+            color: white; /* optional: for better readability on dark background */
+            font-family: Arial, sans-serif; /* optional: basic 90s-style font */
+            text-align: center;
         }
         h1 {
             color: yellow;
@@ -64,39 +64,144 @@
         });
     </script>
 
+    <!-- Consent Manager -->
+    <script type='text/javascript'>
+        import 'https://freshpaint-cdn.com/consent/freshpaint-consent-helper.umd.js';
+        window.freshpaintConsent = CookieConsent;
 
-    <!-- Google Tag Manager Lane -->
-	<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-	new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-	j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-	'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-	})(window,document,'script','dataLayer','GTM-M2PG2J2M');</script>
-	<!-- End Google Tag Manager -->
+        function loadCSS(url) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = url;
+            document.head.appendChild(link);
+        }
 
-    <!-- Sam C -->
-     <script>
-  // Example condition: only load GTM if the user has consented to tracking
-  const userHasConsented = true; // Replace with your actual consent check
-
-  if (userHasConsented) {
-    (function(w,d,s,l,i){
-      w[l]=w[l]||[];
-      w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});
-      var f=d.getElementsByTagName(s)[0],
-          j=d.createElement(s),
-          dl=l!='dataLayer'?'&l='+l:'';
-      j.async=true;
-      j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
-      f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-KQZV25QH'); // Replace with your GTM ID
-  }
-</script>
+        loadCSS("https://freshpaint-cdn.com/consent/consent.css");
+        document.documentElement.classList.add('cc--darkmode');
 
 
+        const onConsentChange = ({cookie}) => {
+            const result = {"All": false};
 
+            for (const services of Object.values(cookie.services)) {
+                for (const service of Object.values(services)) {
+                    result[service] = true;
+                }
+            }
 
+            window.freshpaint.ready(() => {
+                window.freshpaint.set_consent(result);
+            })
+        };
 
+        const defaultConfig = {
+            // This is a Freshpaint specific field that can be used to add custom CSS to the consent manager
+            // through the config. 
+            customCSS: "",
+            categories: {
+                analytics: {
+                    services: {
+                        "Mixpanel": {
+                            label: "Mixpanel"
+                        },
+                        "Amplitude": {
+                            label: "Amplitude"
+                        }
+                    }
+                },
+                advertising: {
+                    services: {
+                        "Facebook Pixel": {
+                            label: "Facebook Pixel"
+                        },
+                        "Google Ads": {
+                            label: "Google Ads",
+                        },
+                    }
+                }
+            },
 
+            language: {
+                default: 'en',
+                autoDetect: 'browser',
+                translations: {
+                    en: {
+                        consentModal: {
+                            title: 'We use cookies',
+                            description: 'Cookie modal description',
+                            acceptAllBtn: 'Accept all',
+                            acceptNecessaryBtn: 'Reject all',
+                            showPreferencesBtn: 'Manage Individual preferences'
+                        },
+                        preferencesModal: {
+                            title: 'Manage consent preferences',
+                            acceptAllBtn: 'Accept all',
+                            acceptNecessaryBtn: 'Reject all',
+                            savePreferencesBtn: 'Accept current selection',
+                            closeIconLabel: 'Close modal',
+                            sections: [
+                                {
+                                    title: "Advertising",
+                                    description: "We use advertising tools to deliver relevant ads, measure the effectiveness of advertising campaigns, and improve our marketing effort",
+                                    linkedCategory: "advertising",
+                                }, 
+                                {
+                                    title: 'Analytics',
+                                    description: 'We use analytics tools for the purpose of measuring site performance, understanding user interactions, and improving our services',
+            
+                                    //this field will generate a toggle linked to the 'necessary' category
+                                    linkedCategory: 'analytics'
+                                }, 
+                            ]
+                        },
+                    },
+                    fr:  {
+                        consentModal: {
+                        title: 'French: we use cookies',
+                        description: 'Cookie modal description',
+                        acceptAllBtn: 'Accept all',
+                        acceptNecessaryBtn: 'Reject all',
+                        showPreferencesBtn: 'Manage Individual preferences'
+                    },
+                    preferencesModal: {
+                        title: 'Preferences',
+                        acceptAllBtn: 'Accept all',
+                        acceptNecessaryBtn: 'Reject all',
+                        savePreferencesBtn: 'Accept current selection',
+                        closeIconLabel: 'Close modal',
+                        sections: [
+                            {
+                                title: "Advertising",
+                                description: "We use advertising tools to deliver relevant ads, measure the effectiveness of advertising campaigns, and improve our marketing effort",
+                                linkedCategory: "advertising",
+                            },
+                            {
+                                title: 'Analytics',
+                                description: 'We use analytics tools for the purpose of measuring site performance, understanding user interactions, and improving our services',
+
+                                //this field will generate a toggle linked to the 'necessary' category
+                                linkedCategory: 'analytics'
+                            }, 
+                        ]
+                    },
+                }
+            }
+            }
+        };
+
+        const config = window.CUSTOM_FRESHPAINT_CONSENT_CONFIG || defaultConfig;
+
+        const style = document.createElement('style');
+        style.textContent = config.customCss;
+        document.head.appendChild(style);
+
+        CookieConsent.run({
+            onConsent: onConsentChange,
+            onChange: onConsentChange,
+            ...(config)
+        });
+
+    </script>
 	
 
     <script>
